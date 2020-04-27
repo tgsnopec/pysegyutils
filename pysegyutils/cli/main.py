@@ -1,5 +1,7 @@
 import click 
 
+from .average_command import add 
+
 @click.group()
 def cli():
     """
@@ -8,6 +10,6 @@ def cli():
     pass 
 
 def add_commands(cli):
-    pass 
+    cli.add_command(add)
 
 add_commands(cli)
