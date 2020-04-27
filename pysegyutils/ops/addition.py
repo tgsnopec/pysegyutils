@@ -47,7 +47,7 @@ def add_files(input_filepath_list, output_filepath, average=False,
         factor = 1.0 / float(len(input_segy_files))
 
     for it in range(input_segy_files[0].tracecount):
-        sum_trace = np.zeros_like(entry.trace[it])
+        sum_trace = np.zeros_like(input_segy_files[0].trace[it])
         for entry in input_segy_files:
             sum_trace += entry.trace[it]
         
