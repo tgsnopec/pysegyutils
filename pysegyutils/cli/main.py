@@ -1,6 +1,7 @@
 import click 
 
 from .average_command import add 
+from .negate_command import negate 
 
 @click.group()
 def cli():
@@ -11,5 +12,6 @@ def cli():
 
 def add_commands(cli):
     cli.add_command(add)
+    cli.add_command(negate)
 
 add_commands(cli)

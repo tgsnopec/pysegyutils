@@ -1,7 +1,7 @@
 import os 
 import click 
 
-from ..ops import add 
+from ..ops import add_files 
 
 @click.command(
     help="""Add/average two or more SEG-Y files.
@@ -11,7 +11,7 @@ from ..ops import add
               is_flag=False, metavar='<comma-separated-list>', type=click.STRING, 
               help='Path of the input SEGY-Y files')
 @click.option('-o', '--output-file', required=True, 
-              type=click.Path(writable=True, exists=False), 
+              type=click.Path(writable=True, file_okay=True, dir_okay=False, resolve_path=True), 
               help='Path of the output SEG-Y file')
 @click.option('-average', '--average', required=False,
               is_flag=True, default=False, show_default=True,  
@@ -35,6 +35,6 @@ def add(input_files, output_file, average, iline, xline):
     
     # Call add function 
     try:
-        add(input_file_list, output_file, average=average, iline=iline, xline=xline)
+        add_files(input_file_list, output_file, average=average, iline=iline, xline=xline)
     except Exception as e: 
         raise e 

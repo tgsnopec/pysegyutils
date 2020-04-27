@@ -1,10 +1,12 @@
 import os 
+import numpy as np
 import segyio 
 
 from ..core import SegyFile, SegyFileAttributes, is_segy_valid 
+from ..core.file_copy_utils import fast_copy
 
-def add(input_filepath_list, output_filepath, average=False, 
-        iline=9, xline=21):
+def add_files(input_filepath_list, output_filepath, average=False, 
+              iline=9, xline=21):
     """
     Add two or more SEG-Y files
     """
@@ -21,5 +23,42 @@ def add(input_filepath_list, output_filepath, average=False,
         raise RuntimeError(error_message)
 
     # Copy the first file to an output file to prevent writing the entire file
+    try:
+        fast_copy(input_filepath_list[0], output_filepath)
+    except OSError as o:
+        # TODO: Use this error message to print something more meaningful 
+        error_message = f'Unable to create output file at {output_filepath}'
+        raise o 
 
-    pass 
+    # Open and store the input files in a list
+    input_segy_files = []
+    for entry in input_filepath_list:
+        segy_file = segyio.open(entry, ignore_geometry=True, strict=False,
+                                       iline=iline, xline=xline)
+        input_segy_files.append(segy_file)
+
+    # Open the output file too
+    output_segy_file = segyio.open(output_filepath, 'r+', ignore_geometry=True,
+                                   strict=False, iline=iline, xline=xline)
+
+    factor = 1.0
+
+    if average:
+        factor = 1.0 / float(len(input_segy_files))
+
+    for it in range(input_segy_files[0].tracecount):
+        sum_trace = np.zeros_like(entry.trace[it])
+        for entry in input_segy_files:
+            sum_trace += entry.trace[it]
+        
+        output_segy_file.trace[it] = factor * sum_trace 
+    
+    # Cleanup now - close all the input files
+    for entry in input_segy_files:
+        try:
+            input_segy_files.close()
+        except:
+            continue 
+    
+    # Close output file too
+    output_segy_file.close()
