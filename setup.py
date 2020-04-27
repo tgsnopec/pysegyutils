@@ -27,7 +27,7 @@ setup(
     dependency_links=[],
     entry_points={
         "console_scripts": [
-            "pysegyutils = pysegyutils.main:cli",
+            "pysegyutils = pysegyutils.cli.main:cli",
         ],
     },
     tests_require=[
