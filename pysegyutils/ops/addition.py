@@ -56,7 +56,7 @@ def add_files(input_filepath_list, output_filepath, average=False,
     # Cleanup now - close all the input files
     for entry in input_segy_files:
         try:
-            input_segy_files.close()
+            entry.close()
         except:
             continue 
     

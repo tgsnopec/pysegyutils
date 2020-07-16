@@ -9,7 +9,7 @@ from ..ops import add_files
 )
 @click.option('-i', '--input-files', required=True, 
               is_flag=False, metavar='<comma-separated-list>', type=click.STRING, 
-              help='Path of the input SEGY-Y files')
+              help='Path of the input SEG-Y files')
 @click.option('-o', '--output-file', required=True, 
               type=click.Path(writable=True, file_okay=True, dir_okay=False, resolve_path=True), 
               help='Path of the output SEG-Y file')
